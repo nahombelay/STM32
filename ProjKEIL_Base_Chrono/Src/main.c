@@ -45,13 +45,12 @@ int main(void)
 	GPIOB->CRL&=~(0xF<<8);
 	GPIOB->CRL|= (0x5<<8);
 	GPIOB->ODR|=GPIO_ODR_ODR1;  // grand  s t y l e  !
-	*/
 	
 	SPI1->CR1 |= (1 << SPI_CR1_CPOL);
 	SPI1->CR1 &= ~SPI_CR1_DFF;
 	
-	
-	USART2->CR2 |= (USART_CR2_STOP & ~(0x1));
+	USART2->CR2 |= (USART_CR2_STOP_1);
+	*/
 	
 	
 	
