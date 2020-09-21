@@ -21,7 +21,7 @@
 #include "stm32f1xx_ll_system.h" // utile dans la fonction SystemClock_Config
 
 #include "Chrono.h"
-
+Time * chronoTime;
 void  SystemClock_Config(void);
 
 /* Private functions ---------------------------------------------------------*/
@@ -55,12 +55,14 @@ int main(void)
 	
 	
   /* Add your application code here */
+  
+  
   // Configuration chronomètre
 	Chrono_Conf(TIM2);
 	
 	// Lancement chronomètre
 	Chrono_Start(); 
-  
+	chronoTime = Chrono_Read();
   /* Infinite loop */
   while (1)
   {

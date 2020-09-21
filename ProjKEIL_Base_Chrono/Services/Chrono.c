@@ -38,13 +38,13 @@ void Chrono_Conf(TIM_TypeDef * Timer)
 
 	// Réglage Timer pour un débordement à 10ms
 	//configure arr et psc
-	MyTimer_Conf(Timer, 9999, 7199);
+	MyTimer_Conf(Timer, 999, 719);
 	
 	// Réglage interruption du Timer avec callback : Chrono_Task_10ms()
-	//MyTimer_IT_Conf(..
+	MyTimer_IT_Conf(Timer, Chrono_Task_10ms, 0);
 	
 	// Validation IT
-	//MyTimer_IT_Enable(..
+	MyTimer_IT_Enable(Timer);
 	
 	
 }
