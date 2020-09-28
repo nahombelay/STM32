@@ -62,13 +62,17 @@ int main(void)
 	// Lancement chronomètre
 	//Chrono_Start(); 
 	//chronoTime = Chrono_Read();
-	
-	//Start en floating input : PC8
-	GPIOC->CRH &= ~(0xB); //0b1011
-	
-	//LED en output push-pull : PC10
+	RCC->APB2ENR = RCC->APB2ENR | RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPCEN;
 	GPIOC->CRH &= ~(0xF << 8); 
+	//Start en floating input : PC8
+	GPIOC->CRH |= (1 << 2); //0b0100
+	/*
+	//LED en output push-pull : PC10
 	GPIOC->CRH |= (1 << 9); //0b0010
+	*/
+	//LED en output Open Drain : PC10
+	GPIOC->CRH |= (1 << 9); //0b0010
+	GPIOC->CRH |= (1 << 10); //0b0110
 	
 	
   /* Infinite loop */
