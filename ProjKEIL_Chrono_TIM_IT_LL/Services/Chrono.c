@@ -10,6 +10,7 @@ Utilise la lib MyTimers.h /.c
 
 #include "Chrono.h"
 #include "MyTimer.h"
+#include "stm32f1xx_ll_gpio.h" 
 
 // variable privée de type Time qui mémorise la durée mesurée
 static Time Chrono_Time; // rem : static rend la visibilité de la variable Chrono_Time limitée à ce fichier 
@@ -130,5 +131,55 @@ void Chrono_Task_10ms(void)
 	}
 	
 }
+
+
+/**
+	* @brief  polle les 3 entrées et gènère les actions à faire
+  * @note   Fct à lancer en tâche de fond (non bloquante)
+	* @param  None 
+  * @retval None
+  */
+void Chrono_Background(void) {
+	
+}
+
+/**
+* Chrono_Conf_io( ): elle doit permettre de configurer les 3 IO 
+* pour recevoir les 2 BP et la LED. Elle est privée
+* et doit être appelée par Chrono_Conf( ).
+*/
+
+void Chrono_Conf_io(void) {
+	//Premier BP1 (S&S : PC8)
+	LL_GPIO_InitTypeDef BP1;
+	//revoir comment mettre le bon pin avec cette fonction
+	LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_8, LL_GPIO_MODE_FLOATING | LL_GPIO_MODE_INPUT);
+	
+	//Premier BP2 (Reset : PC13)
+	LL_GPIO_InitTypeDef BP2;
+	BP2.Pin = LL_GPIO_PIN_13;
+	BP2.Mode = LL_GPIO_MODE_FLOATING | LL_GPIO_MODE_INPUT;
+	BP2.Speed = LL_GPIO_MODE_OUTPUT_10MHz;
+	
+	
+	//Let (PC10)
+	LL_GPIO_InitTypeDef Led;
+	Led.Pin = LL_GPIO_PIN_10;
+	Led.Mode = LL_GPIO_MODE_OUTPUT;
+	Led.Speed = LL_GPIO_MODE_OUTPUT_10MHz;
+	Led.OutputType = LL_GPIO_OUTPUT_PUSHPULL; // A changer ensuite
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
