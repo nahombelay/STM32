@@ -37,6 +37,8 @@ int main(void)
 {
   /* Configure the system clock to 72 MHz */
   SystemClock_Config();
+	// Clock enable
+	RCC->APB2ENR = RCC->APB2ENR | RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPCEN;
 
   /* Add your application code here */
   // Configuration chronomètre
@@ -50,6 +52,7 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
+	  Chrono_Background();
   }
 }
 

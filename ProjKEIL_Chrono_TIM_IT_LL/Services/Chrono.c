@@ -12,6 +12,10 @@ Utilise la lib MyTimers.h /.c
 #include "MyTimer.h"
 #include "stm32f1xx_ll_gpio.h" 
 
+void Chrono_Conf_io(void);
+int etatChrono = 1; // Si etat = 0 -> chorno pas démaré; Si chrono = 1 -> en marche
+int etatLed = 0; //meme principe
+
 // variable privée de type Time qui mémorise la durée mesurée
 static Time Chrono_Time; // rem : static rend la visibilité de la variable Chrono_Time limitée à ce fichier 
 
@@ -37,6 +41,9 @@ void Chrono_Conf(TIM_TypeDef * Timer)
 	// Fixation du Timer
 	Chrono_Timer=Timer;
 
+	//Appel de chronoConfio
+	Chrono_Conf_io();
+	
 	// Réglage Timer pour un débordement à 10ms
 	MyTimer_Conf(Chrono_Timer,999, 719);
 	
@@ -84,7 +91,6 @@ void Chrono_Reset(void)
 {
   // Arrêt Chrono
 	MyTimer_Stop(Chrono_Timer);
-
 	// Reset Time
 	Chrono_Time.Hund=0;
 	Chrono_Time.Sec=0;
@@ -117,6 +123,13 @@ void Chrono_Task_10ms(void)
 	Chrono_Time.Hund++;
 	if (Chrono_Time.Hund==100)
 	{
+		if (etatLed == 0) {
+			LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_10);
+		} else {
+			LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10);
+		}
+		etatLed = (etatLed + 1) % 2 ; 
+		
 		Chrono_Time.Sec++;
 		Chrono_Time.Hund=0;
 	}
@@ -141,6 +154,22 @@ void Chrono_Task_10ms(void)
   */
 void Chrono_Background(void) {
 	
+	//Revoir gestion des bouttons pour trouver le moment ou on relache le boutton 
+	
+	if (LL_GPIO_IsInputPinSet(GPIOC, LL_GPIO_PIN_13)) {
+		Chrono_Reset();
+		etatChrono = 0;
+	} else if (LL_GPIO_IsInputPinSet(GPIOC, LL_GPIO_PIN_8)) {
+		if (etatChrono == 1) {
+			Chrono_Start();
+			etatChrono = (etatChrono + 1) % 2;
+		} else {
+			Chrono_Stop();	
+			etatChrono = (etatChrono + 1) % 2;
+		}
+	}
+		
+	
 }
 
 /**
@@ -150,25 +179,22 @@ void Chrono_Background(void) {
 */
 
 void Chrono_Conf_io(void) {
-	//Premier BP1 (S&S : PC8)
-	LL_GPIO_InitTypeDef BP1;
-	//revoir comment mettre le bon pin avec cette fonction
-	LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_8, LL_GPIO_MODE_FLOATING | LL_GPIO_MODE_INPUT);
+	//(S&S : PC8)
+	LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_8, LL_GPIO_MODE_FLOATING);
 	
-	//Premier BP2 (Reset : PC13)
-	LL_GPIO_InitTypeDef BP2;
-	BP2.Pin = LL_GPIO_PIN_13;
-	BP2.Mode = LL_GPIO_MODE_FLOATING | LL_GPIO_MODE_INPUT;
-	BP2.Speed = LL_GPIO_MODE_OUTPUT_10MHz;
+	//(Reset : PC13)
+	LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_13, LL_GPIO_MODE_FLOATING);
+	
+	//Led (PC10)
+	//Push-Pull
+	LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_10, LL_GPIO_MODE_OUTPUT_10MHz);
+	LL_GPIO_SetPinOutputType(GPIOC, LL_GPIO_PIN_10, LL_GPIO_OUTPUT_PUSHPULL);
+	
+	//Open Drain
+	//LL_GPIO_SetPinOutputType(GPIOC, LL_GPIO_PIN_10, LL_GPIO_OUTPUT_OPENDRAIN);
 	
 	
-	//Let (PC10)
-	LL_GPIO_InitTypeDef Led;
-	Led.Pin = LL_GPIO_PIN_10;
-	Led.Mode = LL_GPIO_MODE_OUTPUT;
-	Led.Speed = LL_GPIO_MODE_OUTPUT_10MHz;
-	Led.OutputType = LL_GPIO_OUTPUT_PUSHPULL; // A changer ensuite
-
+	
 }
 
 
