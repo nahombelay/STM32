@@ -12,6 +12,10 @@ Utilise la lib MyTimers.h /.c
 #include "MyTimer.h"
 #include "stm32f1xx_ll_gpio.h" 
 #include "stm32f1xx_ll_usart.h"
+#include "stm32f1xx_ll_gpio.h" 
+#include "stm32f1xx_ll_utils.h"
+#include "stm32f1xx_ll_bus.h"
+#include "stm32f1xx_ll_rcc.h"
 
 void Chrono_Conf_io(void);
 int etatChrono = 1; // Si etat = 0 -> chorno pas démaré; Si chrono = 1 -> en marche
@@ -181,6 +185,7 @@ void Chrono_Background(void) {
 */
 
 void Chrono_Conf_io(void) {
+	LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
 	//(S&S : PC8)
 	LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_8, LL_GPIO_MODE_FLOATING);
 	
@@ -199,11 +204,27 @@ void Chrono_Conf_io(void) {
 
 void Conf_USART(USART_TypeDef * USART) {
 	//init la clock en fonction de la valeur de usart
-	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
-	LL_USART_Enable(USART);
+	LL_USART_InitTypeDef Usart_struct;
 	
-	LL_USART_SetBaudRate(USART, 0, 9600);
-	LL_USART_SetDataWidth(USART, 90);
+	if (USART == USART1) {
+		LL_APB1_GRP1_EnableClock(RCC_APB2ENR_USART1EN);
+		LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
+		LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_9, LL_GPIO_MODE_ALTERNATE);
+	} else if (USART == USART2) {
+		LL_APB1_GRP1_EnableClock(RCC_APB1ENR_USART2EN);
+		LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
+		LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_2, LL_GPIO_MODE_ALTERNATE);
+	} else if (USART == USART3) {
+		LL_APB2_GRP1_EnableClock(RCC_APB1ENR_USART3EN);
+		LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
+		LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_10, LL_GPIO_MODE_ALTERNATE);
+	}
+	
+	LL_USART_StructInit(&Usart_struct);
+	Usart_struct.TransferDirection = LL_USART_DIRECTION_TX;
+	
+	LL_USART_Init(USART, &Usart_struct);
+	LL_USART_Enable(USART);
 }
 
 

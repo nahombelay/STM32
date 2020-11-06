@@ -43,6 +43,7 @@ int main(void)
   /* Add your application code here */
   // Configuration chronomètre
 	Chrono_Conf(TIM3);
+	Conf_USART(USART2);
 	
 	// Lancement chronomètre
 	Chrono_Start(); 

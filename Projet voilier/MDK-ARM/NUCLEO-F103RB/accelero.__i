@@ -1,0 +1,6 @@
+-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\Inc -I ..\LLDrivers\inc -I ..\Services -I ..\MyDrivers -I ..\Accelero --C99
+-I.\RTE\_Simulateur
+-I"C:\Users\Nahom Belay\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include"
+-I"C:\Users\Nahom Belay\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include"
+-D__UVISION_VERSION="529" -D_RTE_ -DSTM32F10X_MD -DSTM32F103xB -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000U" -DUSE_FULL_ASSERT
+-o nucleo-f103rb\accelero.o --omf_browse nucleo-f103rb\accelero.crf --depend nucleo-f103rb\accelero.d "..\Accelero\accelero.c"

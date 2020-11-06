@@ -102,6 +102,6 @@ void Chrono_Reset(void);
 Time * Chrono_Read(void);
 
 
-
+void Conf_USART(USART_TypeDef * USART);
 
 #endif
