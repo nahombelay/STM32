@@ -45,6 +45,8 @@ int main(void)
 
   /* Add your application code here */
   
+	int sup40;
+	
 	recepteurRFConf();
 	moteurccConf();
 	confAccelero();
@@ -52,8 +54,8 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-	  
-	  tournerTable(getPWMmoteur(), getSens());
+	  sup40 = roulisSup40();
+	  //tournerTable(getPWMmoteur(), getSens());
 	  //test simu tournertable(PA6, 1) 
 	  //sur PA6 on output un pwm TIM3, enable tim3 et gpioA, PA6 output psuh pull
   }

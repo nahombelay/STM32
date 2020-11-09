@@ -427,6 +427,11 @@
               <FileType>1</FileType>
               <FilePath>..\LLDrivers\src\stm32f1xx_ll_tim.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f1xx_ll_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LLDrivers\src\stm32f1xx_ll_adc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -965,6 +970,11 @@
               <FileName>stm32f1xx_ll_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LLDrivers\src\stm32f1xx_ll_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f1xx_ll_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LLDrivers\src\stm32f1xx_ll_adc.c</FilePath>
             </File>
           </Files>
         </Group>
