@@ -4,6 +4,7 @@
 #include "stm32f1xx_ll_tim.h" 
 #include "stm32f1xx_ll_utils.h" 
 #include "stm32f1xx_ll_usart.h" 
+#include "stm32f1xx_ll_exti.h"
 #include "time.h"
 #include "Girouette.h"
 
@@ -23,6 +24,23 @@ void Config_Timer_Girouette(TIM_TypeDef *Timer)
 	Timer->CCMR1 &= ~TIM_CCMR1_CC2S_1;
 	Timer->CCMR1 |= TIM_CCMR1_CC2S_0;
 	Timer->CCER &= ~(TIM_CCER_CC2P_Msk | TIM_CCER_CC2NP_Msk | TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1 | TIM_CCMR1_IC2F_2 | TIM_CCMR1_IC2F_3);
+	
+	
+	
+	
+	
+	// Création de la structure d'initialisation de l'interruption externe
+	LL_EXTI_InitTypeDef Struct_interruption;
+	
+	LL_EXTI_StructInit(&Struct_interruption);
+	Struct_interruption.Line_0_31 = LL_EXTI_LINE_5; // Choix du numéro de la ligne, correspond au Pin 5
+	Struct_interruption.Mode = LL_EXTI_MODE_IT; // Choix du mode interruption 
+	Struct_interruption.Trigger = LL_EXTI_TRIGGER_RISING;
+	Struct_interruption.LineCommand = ENABLE; // Rend active la commande
+	LL_EXTI_Init(&Struct_interruption); // Rend actifs les paramètres de la structure définie ci-dessus
+	
+	NVIC->IP[23] =  0x43;
+	NVIC->ISER[0] |= 0x01 <<23;
 }
 
 void Config_gpio_girouette()
@@ -40,4 +58,9 @@ void start_timer_Girouette(TIM_TypeDef *Timer)
 int get_allure_Girouette(TIM_TypeDef *Timer)
 {
   return (Timer->CNT)/2;
+}
+
+void EXTI9_5_IRQHandler(void) {
+	TIM3->CNT=0;
+	LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_5);
 }
