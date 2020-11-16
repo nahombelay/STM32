@@ -15,3 +15,5 @@ nucleo-f103rb\main.o: ..\Services\Chrono.h
 nucleo-f103rb\main.o: ..\Receptor\recepteurRF.h
 nucleo-f103rb\main.o: ..\Moteur CC\moteurCC.h
 nucleo-f103rb\main.o: ..\Accelero\accelero.h
+nucleo-f103rb\main.o: ..\UART\communication.h
+nucleo-f103rb\main.o: ..\Batterie\batterie.h

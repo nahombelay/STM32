@@ -20,10 +20,15 @@
 #include "stm32f1xx_ll_utils.h"   // utile dans la fonction SystemClock_Config
 #include "stm32f1xx_ll_system.h" // utile dans la fonction SystemClock_Config
 #include "stm32f1xx_ll_tim.h"
+
+
 #include "Chrono.h"
 #include "recepteurRF.h"
 #include "moteurCC.h"
 #include "accelero.h"
+#include "communication.h"
+#include "batterie.h" 
+
 
 
 
@@ -45,16 +50,22 @@ int main(void)
 
   /* Add your application code here */
   
-	int sup40;
+	//int sup40;
 	
 	recepteurRFConf();
 	moteurccConf();
 	confAccelero();
+	configure_uart();
+	configure_gpio_pc2_analog_input();
+	configure_adc_in12();
+	
+	send_battery();
+	
 
   /* Infinite loop */
   while (1)
   {
-	  sup40 = roulisSup40();
+	  //sup40 = roulisSup40();
 	  //tournerTable(getPWMmoteur(), getSens());
 	  //test simu tournertable(PA6, 1) 
 	  //sur PA6 on output un pwm TIM3, enable tim3 et gpioA, PA6 output psuh pull
