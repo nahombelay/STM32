@@ -59,7 +59,7 @@ typedef struct {
 	* @param  TIM_TypeDef Timer : indique le timer à utiliser par le chronomètre, TIM1, TIM2, TIM3 ou TIM4
   * @retval None
   */
-void Chrono_Conf(TIM_TypeDef * Timer);
+void Chrono_Conf(TIM_TypeDef * Timer, void * fct);
 
 
 

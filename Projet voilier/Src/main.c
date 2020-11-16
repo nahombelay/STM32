@@ -20,6 +20,7 @@
 #include "stm32f1xx_ll_utils.h"   // utile dans la fonction SystemClock_Config
 #include "stm32f1xx_ll_system.h" // utile dans la fonction SystemClock_Config
 #include "stm32f1xx_ll_tim.h"
+#include "MyTimer.h"
 
 
 #include "Chrono.h"
@@ -28,6 +29,9 @@
 #include "accelero.h"
 #include "communication.h"
 #include "batterie.h" 
+#include "voile.h"
+#include "girouette.h"
+
 
 
 
@@ -35,6 +39,35 @@
 void  SystemClock_Config(void);
 
 /* Private functions ---------------------------------------------------------*/
+
+void fonction_int(void){
+	
+	if (roulisSup40() == 0) {
+		Tendre_voile(0, TIM3, '4');
+	}
+	Tendre_voile(calcul(), TIM3, '4');
+	tournerTable(getPWMmoteur(), getSens());
+	//UART plus tard
+	
+}
+void Configuration(void){
+	recepteurRFConf();
+	moteurccConf();
+	confAccelero();
+	configure_uart();
+	configure_gpio_pc2_analog_input();
+	configure_adc_in12();
+	
+	Config_Timer_Girouette(TIM3);
+	Config_gpio_girouette();
+	start_timer_Girouette(TIM3);
+	
+	PWM_output_init(TIM4,'3');
+	
+	//Configuration du timer de débordement
+	Chrono_Conf(TIM1, fonction_int);
+	
+}
 
 /**
   * @brief  Main program
@@ -52,12 +85,7 @@ int main(void)
   
 	//int sup40;
 	
-	recepteurRFConf();
-	moteurccConf();
-	confAccelero();
-	configure_uart();
-	configure_gpio_pc2_analog_input();
-	configure_adc_in12();
+	Configuration();
 	
 	send_battery();
 	
@@ -69,6 +97,10 @@ int main(void)
 	  //tournerTable(getPWMmoteur(), getSens());
 	  //test simu tournertable(PA6, 1) 
 	  //sur PA6 on output un pwm TIM3, enable tim3 et gpioA, PA6 output psuh pull
+	  
+	  
+	  
+	  
   }
 }
 

@@ -11,9 +11,12 @@ nucleo-f103rb\main.o: ..\Inc\system_stm32f1xx.h
 nucleo-f103rb\main.o: ..\LLDrivers\inc\stm32f1xx_ll_utils.h
 nucleo-f103rb\main.o: ..\LLDrivers\inc\stm32f1xx_ll_system.h
 nucleo-f103rb\main.o: ..\LLDrivers\inc\stm32f1xx_ll_tim.h
+nucleo-f103rb\main.o: ..\MyDrivers\MyTimer.h
 nucleo-f103rb\main.o: ..\Services\Chrono.h
 nucleo-f103rb\main.o: ..\Receptor\recepteurRF.h
 nucleo-f103rb\main.o: ..\Moteur CC\moteurCC.h
 nucleo-f103rb\main.o: ..\Accelero\accelero.h
 nucleo-f103rb\main.o: ..\UART\communication.h
 nucleo-f103rb\main.o: ..\Batterie\batterie.h
+nucleo-f103rb\main.o: ..\Voile\voile.h
+nucleo-f103rb\main.o: ..\Girouette\girouette.h
