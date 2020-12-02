@@ -3,6 +3,10 @@
 #include "stm32f1xx_ll_tim.h" 
 #include "stm32f1xx_ll_adc.h" 
 
+#include <math.h>
+
+#define M_PI 3.1415926535 
+
 #define X LL_ADC_CHANNEL_10
 #define Y LL_ADC_CHANNEL_11
 
@@ -62,10 +66,17 @@ int convert_input(uint32_t channel){
 //return 0 -> need to fix angle 
 
 int roulisSup40(void) {
-	int conversionRes = convert_input(Y);
-	int ret = 0;
+	int angleTension = convert_input(Y);
+	
+	//convert tension to volts
+	double angleVolt = (double) angleTension / 4095.0 * 3.3; //max volt 3.3 corresponds to 4065
+	
+	int angle = acos(angleVolt) * (180.0 / M_PI);
+
+	
+	int ret = 1;
 	//valeur a ne pas depasser cos(40)*595 -> 456
-	if  (conversionRes < 456) {
+	if  ((angle > 40)){
 		ret = 0;
 	} else {
 		ret = 1;

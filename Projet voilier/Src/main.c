@@ -43,10 +43,11 @@ void  SystemClock_Config(void);
 void fonction_int(void){
 	
 	if (roulisSup40() == 0) {
-		Tendre_voile(0, TIM3, '4');
+		Tendre_voile(0, TIM4, '3');
 	}
-	Tendre_voile(calcul(), TIM3, '4');
-	tournerTable(getPWMmoteur(), getSens());
+	
+	Tendre_voile(calcul(), TIM4, '3');
+	tournerTable();
 	//UART plus tard
 	
 }
@@ -56,6 +57,10 @@ void Configuration(void){
 	confAccelero();
 	configure_uart();
 	configure_gpio_pc2_analog_input();
+	config_gpio_pb();
+	//start_timer_voile(TIM4);
+	//TIM4->CR1 |= TIM_CR1_CEN; 
+	
 	configure_adc_in12();
 	
 	Config_Timer_Girouette(TIM3);
@@ -66,6 +71,7 @@ void Configuration(void){
 	
 	//Configuration du timer de débordement
 	Chrono_Conf(TIM1, fonction_int);
+	
 	
 }
 
@@ -133,7 +139,7 @@ void SystemClock_Config(void)
   /* Enable HSE oscillator */
 	// ********* Commenter la ligne ci-dessous pour MCBSTM32 *****************
 	// ********* Conserver la ligne si Nucléo*********************************
-  LL_RCC_HSE_EnableBypass();
+  //LL_RCC_HSE_EnableBypass();
   LL_RCC_HSE_Enable();
   while(LL_RCC_HSE_IsReady() != 1)
   {

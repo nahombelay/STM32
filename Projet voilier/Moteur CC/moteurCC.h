@@ -3,7 +3,7 @@
 
 void moteurccConf(void);
 
-void tournerTable(int pwmInput, int sens);
+void tournerTable();
 
 
 #endif

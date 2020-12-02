@@ -12,9 +12,10 @@
 #define alpha1 1 // 2/3
 #define alpha2 1 //
 #define beta1 -30 // -30
-#define beta2 -180 // -180
+#define beta2 210 // -180
 
 int angle_voile=45;
+
 void PWM_output_init(TIM_TypeDef *Timer, char Voie)
 {
 	
@@ -60,7 +61,7 @@ void start_timer_voile(TIM_TypeDef *Timer)
 
 int calcul()
 {
-	int allure= get_allure_Girouette(TIM1); // Récupération de l'allure de la girouette
+	int allure= get_allure_Girouette(TIM3); // Récupération de l'allure de la girouette
 	if(0<=allure && allure<=45) // Près serré
 	{
 		return 0; 
@@ -75,7 +76,7 @@ int calcul()
 	}
 	else
 	{
-		return alpha2*allure + beta2;
+		return -2*allure/3 + beta2;
 	}
 }
 

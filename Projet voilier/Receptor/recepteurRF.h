@@ -3,9 +3,8 @@
 
 void recepteurRFConf(void);
 
-float getAlpha(void);
+float getdutyCycle(void);
 
-int getSens(void);
+void setRF();
 
-int getPWMmoteur(void);
 #endif

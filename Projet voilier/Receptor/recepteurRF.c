@@ -1,5 +1,11 @@
 #include "MyTimer.h"
 #include "recepteurRF.h"
+#include "stm32f1xx_ll_tim.h"
+#include "stm32f1xx_ll_gpio.h"
+#include <math.h>
+
+#define GAUCHE 0
+#define DROITE 1
 
 
 void recepteurRFConf() {
@@ -20,7 +26,7 @@ void recepteurRFConf() {
 	GPIOB->CRL |= (1<< 26);
 	
 	//PB7: en floating input (à vérifier)
-	GPIOB->CRL &= ~(0xF << 28);
+	//GPIOB->CRL &= ~(0xF << 28);
 	GPIOB->CRL |= (1<< 30);
 	
 	//Select the active input for TIM4_CCR1: write the CC1S bits to 01 in the TIMx_CCMR1 register (TI1 selected)
@@ -28,7 +34,7 @@ void recepteurRFConf() {
 	TIM4->CCMR1 |= (1<<0);
 	
 	//Select the active polarity active on rising edge CC1
-	TIM4->CCER |= TIM_CCER_CC1P;
+	//TIM4->CCER |= TIM_CCER_CC1P;
 	
 	//Select the active input for TIM4_CCR2: write the CC2S bits to 10 in the TIMx_CCMR1 register (TI1 selected)
 	TIM4->CCMR1 &= ~(1<<8);
@@ -54,30 +60,41 @@ void recepteurRFConf() {
 	//configuration de TIM4 sur PB6 et PB7 pour le récépteur RF	
 }
 
-float getAlpha(){
-	float periode, alpha; 
-	float ratio;
+float getdutyCycle(){
+	int pulse, periode; 
+	float dutycycle;
 	
-	periode = (float) TIM4->CCR1;
-	alpha = (float) TIM4->CCR2;
+	periode =  LL_TIM_OC_GetCompareCH1(TIM4);
+	pulse =  LL_TIM_OC_GetCompareCH2(TIM4);
 	
-	ratio = (alpha / periode) * 100 ;
+	dutycycle = ((float) pulse / (float) periode)  ;
 
-	return ratio;
+	return dutycycle;
 	
 }
 
-int getSens(void){
-	float alpha = getAlpha();
-	int sens;
-	if ((5.0 <= alpha) && (alpha <= 7.45)){
-		 sens = 0;
-	} else if ((7.55 <= alpha) && (alpha <= 10.0)) {
-		sens = 1;
+void setRF(){
+	float dutycycle = getdutyCycle();
+	//7.5% -> valeur neutre et 10% -> max
+	float set = (dutycycle - 0.075) / (0.1 - 0.075);
+	
+	//si set > tourne à gauche
+	int sens = (set > 0);
+	
+	//tolérance de 2.5%
+	if (fabs(set) > 0.025) {
+		//gauche
+		if (sens == GAUCHE) {
+			LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_2);
+		} else {
+			LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_2);
+		}	
+		
+		LL_TIM_OC_SetCompareCH2(TIM2, fabs(set));
+		
+	} else {
+		LL_TIM_OC_SetCompareCH2(TIM2, 0);
 	}
-	return sens;
+	
 }
 
-int getPWMmoteur(){
-    return (TIM4->ARR)*getAlpha()/100;
-}
